@@ -315,6 +315,10 @@ void NeuralNetwork<TDevice>::__InitializeNetworkLayerIdx(
 		// signal generation layers
 		m_signalGenLayerId.push_back(counter);
 		
+	    }else if (layerType == "midi_interface"){
+		// MIDI sin generator
+		m_signalGenLayerId.push_back(counter);
+		
 	    }else if (layerType == "distilling"){
 		// distilling layers (not maintained)
 		m_distillingLayers.push_back(counter);
@@ -1342,8 +1346,10 @@ bool NeuralNetwork<TDevice>::flagLayerCanbeOptimizedMA(const int layerID)
     if (layerID < 0 || layerID >= m_totalNumLayers || layerID >= m_layers.size())
 	throw std::runtime_error("Error: flagLayerCanbeOptimizedMA input layerID invalid");
     
-    if (m_signalGenLayerId.empty())
-	throw std::runtime_error("Error: memorysave mode for MA is only for NSF models");
+    if (m_signalGenLayerId.empty()){
+	printf("\nWarning: memorysave mode for MA is only for NSF models");
+	printf("\nYou may get wrong output");
+    }
     
     return internal::flagLayerCanBeOptimizedMA(
 		layerID, m_signalGenLayerId[0], m_totalNumLayers,
